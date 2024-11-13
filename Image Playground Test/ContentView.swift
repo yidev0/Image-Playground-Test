@@ -12,12 +12,10 @@ struct ContentView: View {
     
     @Environment(\.supportsImagePlayground) var supportsImagePlayground
     @Environment(\.openURL) var openURL
+    @Environment(\.openWindow) var openWindow
     
-    @State var isPresented: Bool = false
-    @State var isPresentedWithConcept: Bool = false
-    
-    @State var text: String = ""
-    @State var resultURL: URL?
+    @State var showPlayground: Bool = false
+    @State var concepts: [String] = []
     
     var body: some View {
         if supportsImagePlayground {
@@ -35,43 +33,52 @@ struct ContentView: View {
     var form: some View {
         Form {
             Section {
-                Button {
-                    isPresented = true
-                } label: {
-                    Text("Show Playground")
+                ForEach(concepts.indices, id: \.self) { index in
+                    TextField("Concept", text: $concepts[index])
+                        .labelsHidden()
+                        .onSubmit {
+                            addConcept()
+                        }
+                }
+                .onDelete(perform: deleteConcept(at:))
+            } header: {
+                HStack {
+                    Text("Concepts")
+                    Spacer()
+                    Button {
+                        addConcept()
+                    } label: {
+                        Text("Add Concept")
+                    }
+                    .buttonStyle(.borderless)
                 }
             }
             
             Section {
-                TextField("Concept", text: $text)
                 Button {
-                    isPresentedWithConcept = true
+                    showPlayground = true
                 } label: {
                     Text("Show Playground")
-                }
-                .disabled(text.isEmpty)
-            }
-            
-            if let url = resultURL {
-                Section {
-#if canImport(AppKit)
-                    if let image = NSImage(data: .init(try! Data(contentsOf: url))) {
-                        Image(nsImage: image)
-                    }
-#else
-                    if let image = UIImage(data: .init(try! Data(contentsOf: url))) {
-                        Image(uiImage: image)
-                    }
-#endif
                 }
             }
         }
         .formStyle(.grouped)
-        .imagePlaygroundSheet(isPresented: $isPresented) { url in
-            
+        .imagePlaygroundSheet(
+            isPresented: $showPlayground,
+            concepts: concepts.map { ImagePlaygroundConcept.text($0)
+            }
+        ) { url in
+            openWindow.callAsFunction(id: "Image", value: url)
         }
-        .imagePlaygroundSheet(isPresented: $isPresentedWithConcept, concept: text) { url in
-            
+    }
+    
+    func deleteConcept(at offsets: IndexSet) {
+        concepts.remove(atOffsets: offsets)
+    }
+    
+    func addConcept() {
+        if concepts.last?.isEmpty == false || concepts.isEmpty {
+            concepts.append("")
         }
     }
 }
