@@ -13,6 +13,7 @@ struct Image_Playground_TestApp: App {
         WindowGroup {
             ContentView()
         }
+        .defaultSize(.init(width: 400, height: 300))
         
         WindowGroup("Result", id: "Image", for: URL.self) { url in
             ZStack {
@@ -33,14 +34,9 @@ struct Image_Playground_TestApp: App {
                 }
             }
             .aspectRatio(1, contentMode: .fit)
-            .frame(
-                minWidth: 200,
-                idealWidth: 200,
-                minHeight: 200,
-                idealHeight: 200
-            )
             .aspectRatio(1, contentMode: .fit)
         }
+        .defaultSize(.init(width: 300, height: 300))
         .windowIdealSize(.fitToContent)
         .windowResizability(.contentMinSize)
     }
