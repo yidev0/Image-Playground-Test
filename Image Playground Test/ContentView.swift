@@ -34,11 +34,19 @@ struct ContentView: View {
         Form {
             Section {
                 ForEach(concepts.indices, id: \.self) { index in
-                    TextField("Concept", text: $concepts[index])
-                        .labelsHidden()
-                        .onSubmit {
-                            addConcept()
+                    HStack {
+                        TextField("Concept", text: $concepts[index])
+                            .labelsHidden()
+                            .onSubmit {
+                                addConcept()
+                            }
+                        
+                        Button {
+                            concepts.remove(at: index)
+                        } label: {
+                            Image(systemName: "minus")
                         }
+                    }
                 }
                 .onDelete(perform: deleteConcept(at:))
             } header: {
