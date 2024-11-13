@@ -14,7 +14,7 @@ struct Image_Playground_TestApp: App {
             ContentView()
         }
         
-        WindowGroup(id: "Image", for: URL.self) { url in
+        WindowGroup("Result", id: "Image", for: URL.self) { url in
             ZStack {
                 if let url = url.wrappedValue {
 #if canImport(AppKit)
@@ -39,6 +39,7 @@ struct Image_Playground_TestApp: App {
                 minHeight: 200,
                 idealHeight: 200
             )
+            .aspectRatio(1, contentMode: .fit)
         }
         .windowIdealSize(.fitToContent)
         .windowResizability(.contentMinSize)
