@@ -19,7 +19,7 @@ struct Image_Playground_TestApp: App {
             ZStack {
                 if let url = url.wrappedValue {
 #if canImport(AppKit)
-                    if let image = NSImage(data: .init(try! Data(contentsOf: url))) {
+                    if let image = NSImage(contentsOf: url) {
                         Image(nsImage: image)
                             .resizable()
                     }
