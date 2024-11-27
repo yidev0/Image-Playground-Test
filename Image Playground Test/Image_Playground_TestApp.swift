@@ -37,7 +37,9 @@ struct Image_Playground_TestApp: App {
             .aspectRatio(1, contentMode: .fit)
         }
         .defaultSize(.init(width: 300, height: 300))
+#if canImport(AppKit)
         .windowIdealSize(.fitToContent)
+#endif
         .windowResizability(.contentMinSize)
     }
 }
